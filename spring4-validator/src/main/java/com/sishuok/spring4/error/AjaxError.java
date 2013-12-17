@@ -31,16 +31,16 @@ public class AjaxError implements Serializable {
 
     public static AjaxError from(Errors errors, Locale locale) {
         AjaxError ajaxError = new AjaxError();
-        if (errors.hasGlobalErrors()) {
+        if(errors.hasGlobalErrors()) {
             ajaxError.globalErrors = new ArrayList<>();
-            for (ObjectError error : errors.getGlobalErrors()) {
+            for(ObjectError error : errors.getGlobalErrors()) {
                 ajaxError.globalErrors.add(getMessage(error, locale));
             }
         }
 
-        if (errors.hasFieldErrors()) {
+        if(errors.hasFieldErrors()) {
             ajaxError.fieldErrors = new ArrayList<>();
-            for (FieldError error : errors.getFieldErrors()) {
+            for(FieldError error : errors.getFieldErrors()) {
                 Map<String, String> errorData = new HashMap<>();
                 errorData.put(error.getField(), getMessage(error, locale));
                 ajaxError.fieldErrors.add(errorData);

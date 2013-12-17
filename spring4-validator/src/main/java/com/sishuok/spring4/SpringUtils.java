@@ -5,6 +5,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.context.ApplicationContextAware;
 import org.springframework.stereotype.Component;
 
+import javax.annotation.PostConstruct;
+
 /**
  * <p>User: Zhang Kaitao
  * <p>Date: 13-12-16
@@ -21,6 +23,6 @@ public class SpringUtils implements ApplicationContextAware {
     }
 
     public static <T> T getBean(String name) {
-        return (T) context.getBean(name);
+        return (T)context.getBean(name);
     }
 }

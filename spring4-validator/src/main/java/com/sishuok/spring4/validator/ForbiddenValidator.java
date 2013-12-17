@@ -27,13 +27,13 @@ public class ForbiddenValidator implements ConstraintValidator<CheckPassword, St
 
     @Override
     public boolean isValid(String value, ConstraintValidatorContext context) {
-        if (StringUtils.isEmpty(value)) {
+        if(StringUtils.isEmpty(value)) {
             return true;
         }
 
-        for (String word : forbiddenWords) {
-            if (value.contains(word)) {
-                ((ConstraintValidatorContextImpl) context).getConstraintDescriptor().getAttributes().put("word", word);
+        for(String word : forbiddenWords) {
+            if(value.contains(word)) {
+                ((ConstraintValidatorContextImpl)context).getConstraintDescriptor().getAttributes().put("word", word);
                 return false;//验证失败
             }
         }

@@ -19,12 +19,12 @@ public class CheckPasswordValidator implements ConstraintValidator<CheckPassword
 
     @Override
     public boolean isValid(User user, ConstraintValidatorContext context) {
-        if (user == null) {
+        if(user == null) {
             return true;
         }
 
         //没有填密码
-        if (!StringUtils.hasText(user.getPassword())) {
+        if(!StringUtils.hasText(user.getPassword())) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("{password.null}")
                     .addPropertyNode("password")
@@ -32,7 +32,7 @@ public class CheckPasswordValidator implements ConstraintValidator<CheckPassword
             return false;
         }
 
-        if (!StringUtils.hasText(user.getConfirmation())) {
+        if(!StringUtils.hasText(user.getConfirmation())) {
             context.disableDefaultConstraintViolation();
             context.buildConstraintViolationWithTemplate("{password.confirmation.null}")
                     .addPropertyNode("confirmation")

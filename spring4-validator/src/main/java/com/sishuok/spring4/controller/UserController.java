@@ -3,17 +3,22 @@ package com.sishuok.spring4.controller;
 import com.sishuok.spring4.entity.User;
 import com.sishuok.spring4.error.AjaxError;
 import com.sishuok.spring4.service.UserService;
+import com.sishuok.spring4.validator.CrossParameter;
+import org.hibernate.validator.messageinterpolation.ResourceBundleMessageInterpolator;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.validation.Errors;
+import org.springframework.validation.ValidationUtils;
+import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.ConstraintViolation;
 import javax.validation.ConstraintViolationException;
 import javax.validation.Valid;
+import javax.validation.Validator;
 
 /**
  * <p>User: Zhang Kaitao
@@ -25,7 +30,7 @@ public class UserController {
 
     @RequestMapping("/save")
     public String save(@Valid User user, BindingResult result) {
-        if (result.hasErrors()) {
+        if(result.hasErrors()) {
             return "error";
         }
         return "success";
@@ -34,7 +39,7 @@ public class UserController {
     @RequestMapping("/ajax")
     @ResponseBody
     public Object ajaxError(@Valid User user, BindingResult result) {
-        if (result.hasErrors()) {
+        if(result.hasErrors()) {
             return AjaxError.from(result, null);
         }
         return "success";
@@ -43,7 +48,7 @@ public class UserController {
 
     @RequestMapping("/register")
     public String register(@Valid User user, BindingResult result) {
-        if (result.hasErrors()) {
+        if(result.hasErrors()) {
             return "error";
         }
         return "success";
@@ -61,7 +66,7 @@ public class UserController {
         try {
             userService.changePassword(password, confirmation);
         } catch (ConstraintViolationException e) {
-            for (ConstraintViolation violation : e.getConstraintViolations()) {
+            for(ConstraintViolation violation : e.getConstraintViolations()) {
                 System.out.println(violation.getMessage());
             }
         }

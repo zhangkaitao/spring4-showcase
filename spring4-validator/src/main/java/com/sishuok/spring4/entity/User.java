@@ -1,8 +1,9 @@
 package com.sishuok.spring4.entity;
 
-import com.sishuok.spring4.validator.Composition;
 import com.sishuok.spring4.validator.CrossParameterScriptAssert;
+import com.sishuok.spring4.validator.PropertyScriptAssert;
 
+import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 
 /**
@@ -16,7 +17,6 @@ public class User implements Serializable {
 
     private Long id;
 
-    @Composition()
     private String name;
 
     private String password;

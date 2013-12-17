@@ -30,7 +30,7 @@ public class CrossParameterScriptAssertClassValidator implements ConstraintValid
     private String message;
 
     public void initialize(CrossParameterScriptAssert constraintAnnotation) {
-        validateParameters(constraintAnnotation);
+        validateParameters( constraintAnnotation );
 
         this.script = constraintAnnotation.script();
         this.languageName = constraintAnnotation.lang();
@@ -46,21 +46,23 @@ public class CrossParameterScriptAssertClassValidator implements ConstraintValid
 
         try {
             ScriptEvaluatorFactory evaluatorFactory = ScriptEvaluatorFactory.getInstance();
-            scriptEvaluator = evaluatorFactory.getScriptEvaluatorByLanguageName(languageName);
-        } catch (ScriptException e) {
-            throw new ConstraintDeclarationException(e);
+            scriptEvaluator = evaluatorFactory.getScriptEvaluatorByLanguageName( languageName );
+        }
+        catch ( ScriptException e ) {
+            throw new ConstraintDeclarationException( e );
         }
 
         try {
-            evaluationResult = scriptEvaluator.evaluate(script, value, alias);
-        } catch (ScriptException e) {
-            throw log.getErrorDuringScriptExecutionException(script, e);
+            evaluationResult = scriptEvaluator.evaluate( script, value, alias );
+        }
+        catch ( ScriptException e ) {
+            throw log.getErrorDuringScriptExecutionException( script, e );
         }
 
-        if (evaluationResult == null) {
-            throw log.getScriptMustReturnTrueOrFalseException(script);
+        if ( evaluationResult == null ) {
+            throw log.getScriptMustReturnTrueOrFalseException( script );
         }
-        if (!(evaluationResult instanceof Boolean)) {
+        if ( !( evaluationResult instanceof Boolean ) ) {
             throw log.getScriptMustReturnTrueOrFalseException(
                     script,
                     evaluationResult,
@@ -68,7 +70,7 @@ public class CrossParameterScriptAssertClassValidator implements ConstraintValid
             );
         }
 
-        if (Boolean.FALSE.equals(evaluationResult) && StringUtils.hasLength(property)) {
+        if(Boolean.FALSE.equals(evaluationResult) && StringUtils.hasLength(property)) {
             constraintValidatorContext.disableDefaultConstraintViolation();
             constraintValidatorContext
                     .buildConstraintViolationWithTemplate(message)
@@ -76,13 +78,13 @@ public class CrossParameterScriptAssertClassValidator implements ConstraintValid
                     .addConstraintViolation();
         }
 
-        return Boolean.TRUE.equals(evaluationResult);
+        return Boolean.TRUE.equals( evaluationResult );
     }
 
     private void validateParameters(CrossParameterScriptAssert constraintAnnotation) {
         Contracts.assertNotEmpty(constraintAnnotation.script(), MESSAGES.parameterMustNotBeEmpty("script"));
-        Contracts.assertNotEmpty(constraintAnnotation.lang(), MESSAGES.parameterMustNotBeEmpty("lang"));
-        Contracts.assertNotEmpty(constraintAnnotation.alias(), MESSAGES.parameterMustNotBeEmpty("alias"));
-        Contracts.assertNotEmpty(constraintAnnotation.message(), MESSAGES.parameterMustNotBeEmpty("message"));
+        Contracts.assertNotEmpty( constraintAnnotation.lang(), MESSAGES.parameterMustNotBeEmpty( "lang" ) );
+        Contracts.assertNotEmpty( constraintAnnotation.alias(), MESSAGES.parameterMustNotBeEmpty( "alias" ) );
+        Contracts.assertNotEmpty( constraintAnnotation.message(), MESSAGES.parameterMustNotBeEmpty( "message" ) );
     }
 }
