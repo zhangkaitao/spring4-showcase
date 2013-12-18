@@ -18,7 +18,6 @@ public class GenericGroovyContextLoader extends AbstractGenericContextLoader {
                 "GenericGroovyContextLoader does not support the getResourceSuffix() method");
     }
 
-
     @Override
     protected BeanDefinitionReader createBeanDefinitionReader(GenericApplicationContext context) {
         return new GroovyBeanDefinitionReader(context);

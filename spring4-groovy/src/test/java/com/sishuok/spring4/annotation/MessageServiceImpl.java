@@ -11,7 +11,6 @@ import org.springframework.stereotype.Component;
  */
 @Component
 public class MessageServiceImpl implements MessageService {
-
     @Autowired
     @Qualifier("message")
     private String message;

@@ -11,11 +11,11 @@ import org.springframework.context.support.GenericGroovyApplicationContext;
  * <p>Version: 1.0
  */
 public class XmlGroovyBeanDefinitionTest1 {
-
     @Test
     public void test() {
-        ApplicationContext ctx = new GenericGroovyApplicationContext("classpath:spring-context-xml.groovy");
+        ApplicationContext ctx = new GenericGroovyApplicationContext("classpath:spring-config-xml.groovy");
         MessagePrinter messagePrinter = (MessagePrinter) ctx.getBean("messagePrinter");
         messagePrinter.printMessage();
+        System.out.println(ctx.getBean("map"));
     }
 }

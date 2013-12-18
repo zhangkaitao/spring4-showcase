@@ -15,9 +15,6 @@ beans {
 
     groovyController(GroovyController)
 
-    xmlns lang: "http://www.springframework.org/schema/lang"
-
-    lang.'groovy'(id: 'groovyController2', 'script-source': 'classpath:com/sishuok/spring4/controller/GroovyController2.groovy')
 
 }
 
