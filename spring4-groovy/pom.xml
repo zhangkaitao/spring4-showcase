@@ -25,6 +25,12 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>javax.servlet</groupId>
@@ -140,6 +146,23 @@
 
     <build>
         <finalName>spring4</finalName>
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+            <resource>
+                <directory>src/main/groovy</directory>
+                <includes>
+                    <include>**/*.*</include>
+                </includes>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
         <plugins>
             <plugin>
                 <groupId>org.mortbay.jetty</groupId>
@@ -198,6 +221,8 @@
         <junit.version>4.11</junit.version>
 
         <hibernate.validator.version>5.0.2.Final</hibernate.validator.version>
+
+        <groovy.version>2.2.1</groovy.version>
     </properties>
 
 
