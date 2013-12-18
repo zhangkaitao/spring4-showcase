@@ -13,6 +13,7 @@
         <module>spring4-annotation</module>
         <module>spring4-groovy</module>
         <module>spring4-validator</module>
+        <module>spring4-others</module>
     </modules>
 
 
