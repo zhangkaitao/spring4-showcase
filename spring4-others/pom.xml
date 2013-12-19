@@ -29,6 +29,12 @@
             <scope>provided</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.codehaus.groovy</groupId>
+            <artifactId>groovy-all</artifactId>
+            <version>${groovy.version}</version>
+        </dependency>
+
 
         <dependency>
             <groupId>org.springframework</groupId>
@@ -194,6 +200,8 @@
         <junit.version>4.11</junit.version>
 
         <hibernate.validator.version>5.0.2.Final</hibernate.validator.version>
+
+        <groovy.version>2.2.1</groovy.version>
     </properties>
 
 
