@@ -8,6 +8,7 @@ import org.springframework.scripting.support.StaticScriptSource;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 /**
  * <p>User: Zhang Kaitao
@@ -17,7 +18,7 @@ import java.util.Map;
 public class ScriptTest {
 
     @Test
-    public void test() {
+    public void test() throws ExecutionException, InterruptedException {
         ScriptEvaluator scriptEvaluator = new GroovyScriptEvaluator();
 
         //ResourceScriptSource 外部的
@@ -26,6 +27,5 @@ public class ScriptTest {
         args.put("i", 1);
         args.put("j", 2);
         System.out.println(scriptEvaluator.evaluate(source, args));
-
     }
 }
