@@ -6,6 +6,11 @@
         version="3.0"
         metadata-complete="false">
 
+    <context-param>
+        <param-name>myConfig</param-name>
+        <param-value>hello</param-value>
+    </context-param>
+
     <!-- 设置servlet编码开始 -->
     <filter>
         <filter-name>Set Character Encoding</filter-name>

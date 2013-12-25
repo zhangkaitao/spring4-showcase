@@ -28,7 +28,6 @@ public class AppInitializer implements WebApplicationInitializer {
         //2、springmvc上下文
         AnnotationConfigWebApplicationContext springMvcContext = new AnnotationConfigWebApplicationContext();
         springMvcContext.register(MvcConfiguration.class);
-
         //3、DispatcherServlet
         DispatcherServlet dispatcherServlet = new DispatcherServlet(springMvcContext);
         ServletRegistration.Dynamic dynamic = sc.addServlet("dispatcherServlet", dispatcherServlet);
