@@ -264,7 +264,7 @@ public class ServerControllerTest {
         User user2 = new User();
         user2.setId(2L);
         user2.setName("admin");
-        user2.setUser2(user2);
+//        user2.setUser2(user2);
 
         userlist.add(user1);
         userlist.add(user2);

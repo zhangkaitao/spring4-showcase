@@ -19,22 +19,12 @@ public class User implements Serializable {
     @XmlElement(name = "name")
     private String name;
 
-    private User user2;
-
     public Long getId() {
         return id;
     }
 
     public void setId(Long id) {
         this.id = id;
-    }
-
-    public User getUser2() {
-        return user2;
-    }
-
-    public void setUser2(User user2) {
-        this.user2 = user2;
     }
 
     public String getName() {
