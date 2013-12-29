@@ -13,7 +13,11 @@
     <context:component-scan base-package="com.sishuok.mvc" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>
+
     <mvc:annotation-driven/>
+
+    <mvc:resources mapping="/static/**" location="/WEB-INF/static/"/>
+
     <bean id="viewResolver" class="org.springframework.web.servlet.view.InternalResourceViewResolver">
         <property name="prefix" value="/WEB-INF/jsp/"/>
         <property name="suffix" value=".jsp"/>

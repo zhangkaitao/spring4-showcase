@@ -15,7 +15,7 @@
         <module>spring4-validator</module>
         <module>spring4-others</module>
         <module>spring4-datetime-jsr310</module>
+        <module>spring-mvc-test</module>
     </modules>
-
 
 </project>

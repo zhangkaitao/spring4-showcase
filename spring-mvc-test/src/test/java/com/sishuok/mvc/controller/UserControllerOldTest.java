@@ -12,7 +12,7 @@ import org.springframework.web.servlet.ModelAndView;
  * <p>Date: 13-12-26
  * <p>Version: 1.0
  */
-public class UserControllerTest {
+public class UserControllerOldTest {
 
     private UserController userController;
 

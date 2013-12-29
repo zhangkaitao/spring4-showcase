@@ -1,48 +1,47 @@
 package com.sishuok.mvc.controller;
 
-import com.sishuok.config.AppConfig;
-import com.sishuok.config.MvcConfig;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.mockito.Matchers;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.http.MediaType;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.ContextHierarchy;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
-import org.springframework.test.context.support.AnnotationConfigContextLoader;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.util.Arrays;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
-import static org.springframework.test.web.servlet.setup.MockMvcBuilders.standaloneSetup;
 
 /**
  * <p>User: Zhang Kaitao
  * <p>Date: 13-12-26
  * <p>Version: 1.0
  */
+
+//XML风格
 @RunWith(SpringJUnit4ClassRunner.class)
 @WebAppConfiguration(value = "src/main/webapp")
 @ContextHierarchy({
-        @ContextConfiguration(name = "parent", classes = AppConfig.class),
-        @ContextConfiguration(name = "child", classes = MvcConfig.class),
+        @ContextConfiguration(name = "parent", locations = "classpath:spring-config.xml"),
+        @ContextConfiguration(name = "child", locations = "classpath:spring-mvc.xml")
 })
-public class UserControllerTest3 {
+
+//注解风格
+//@RunWith(SpringJUnit4ClassRunner.class)
+//@WebAppConfiguration(value = "src/main/webapp")
+//@ContextHierarchy({
+//        @ContextConfiguration(name = "parent", classes = AppConfig.class),
+//        @ContextConfiguration(name = "child", classes = MvcConfig.class)
+//})
+public class UserControllerWebAppContextSetupTest {
 
     @Autowired
     private WebApplicationContext wac;
-
     private MockMvc mockMvc;
 
     @Before
@@ -61,5 +60,6 @@ public class UserControllerTest3 {
                 .andExpect(status().isOk())
                 .andDo(print());
     }
+
 
 }

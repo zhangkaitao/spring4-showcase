@@ -1,5 +1,9 @@
 package com.sishuok.mvc.entity;
 
+import javax.xml.bind.annotation.XmlAccessType;
+import javax.xml.bind.annotation.XmlAccessorType;
+import javax.xml.bind.annotation.XmlElement;
+import javax.xml.bind.annotation.XmlRootElement;
 import java.io.Serializable;
 
 /**
@@ -7,8 +11,12 @@ import java.io.Serializable;
  * <p>Date: 13-12-26
  * <p>Version: 1.0
  */
+@XmlRootElement(name = "user")
+@XmlAccessorType(XmlAccessType.FIELD)
 public class User implements Serializable {
+    @XmlElement(name = "id")
     private Long id;
+    @XmlElement(name = "name")
     private String name;
 
     public Long getId() {
