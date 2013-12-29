@@ -1,5 +1,6 @@
 package com.sishuok.mvc.controller;
 
+import com.sishuok.matcher.HasProperty;
 import com.sishuok.mvc.entity.User;
 import org.hamcrest.CoreMatchers;
 import org.junit.Assert;
@@ -19,7 +20,13 @@ import org.springframework.web.context.WebApplicationContext;
 
 import javax.servlet.*;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
 
+import static org.hamcrest.CoreMatchers.equalTo;
+import static org.hamcrest.CoreMatchers.hasItem;
+import static org.hamcrest.beans.HasPropertyWithValue.hasProperty;
+import static org.junit.Assert.assertThat;
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.*;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.*;
@@ -52,9 +59,11 @@ public class ServerControllerTest {
 
     @Test
     public void test1() throws Exception {
+
         //测试普通控制器
         mockMvc.perform(get("/user/{id}", 1)) //执行请求
                 .andExpect(model().attributeExists("user")) //验证存储模型数据
+                .andExpect(model().attribute("user", hasProperty("name", equalTo("zhang")))) //验证存储模型数据
                 .andExpect(view().name("user/view")) //验证viewName
                 .andExpect(forwardedUrl("/WEB-INF/jsp/user/view.jsp"))//验证视图渲染时forward到的jsp
                 .andExpect(status().isOk())//验证状态码
@@ -242,6 +251,29 @@ public class ServerControllerTest {
         @Override
         public void destroy() {
         }
+    }
+
+
+    @Test
+    public void testNestedProperty() {
+        List<User> userlist = new ArrayList<>();
+        User user1 = new User();
+        user1.setId(1L);
+        user1.setName("zhang");
+
+        User user2 = new User();
+        user2.setId(2L);
+        user2.setName("admin");
+        user2.setUser2(user2);
+
+        userlist.add(user1);
+        userlist.add(user2);
+
+        assertThat((List<Object>) (List) userlist, hasItem(
+//                HasPropertyWithValue.hasProperty("user2.name", is("admin"))
+                HasProperty.hasProperty("user2.name")
+        ));
+
     }
 
 }
