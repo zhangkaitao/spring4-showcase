@@ -42,7 +42,6 @@ public class MockServerClientTest extends AbstractClientTest {
         mockServer = createServer(restTemplate);
     }
 
-
     @Test
     public void testFindById() throws JsonProcessingException {
         String uri = baseUri + "/{id}";
