@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+       xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+       xmlns:util="http://www.springframework.org/schema/util"
+       xsi:schemaLocation="
+       http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+       http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util.xsd
+      ">
+
+    <util:list id="myList1" value-type="com.sishuok.spring4.genericinject.component.BeanInteface">
+        <ref bean="beanImpl1"/>
+    </util:list>
+
+    <bean id="myList2" class="java.util.ArrayList">
+        <constructor-arg>
+            <list value-type="com.sishuok.spring4.genericinject.component.BeanInteface">
+                <ref bean="beanImpl2"/>
+            </list>
+        </constructor-arg>
+    </bean>
+
+</beans>
