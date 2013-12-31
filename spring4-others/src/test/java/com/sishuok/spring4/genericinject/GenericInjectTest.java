@@ -32,11 +32,11 @@ import static org.junit.Assert.assertThat;
 public class GenericInjectTest {
 
     @Autowired
-    @Qualifier("myList1")
+    @Qualifier("myList1") //必须指定名字（因为xml中配置的集合没有泛型，除非只有一个集合 Bean）
     private List<BeanInteface> myList1;
 
     @Autowired
-    @Qualifier("myList2")
+    @Qualifier("myList2") //必须指定名字（因为xml中配置的集合没有泛型，除非只有一个集合 Bean）
     private List<BeanInteface> myList2;
 
     @Autowired
@@ -48,13 +48,15 @@ public class GenericInjectTest {
         assertEquals(1, beanIntefaceList.size());
         assertThat(beanIntefaceList, hasItem(isA(BeanImpl1.class)));
 
+        //如果没有  public List<BeanInteface> customBeanIntefaceList() 则如下返回真
+//        Assert.assertEquals(2, beanIntefaceList.size());
+
         assertEquals(1, myList1.size());
         assertThat(myList1, hasItem(isA(BeanImpl1.class)));
 
         assertEquals(1, myList2.size());
         assertThat(myList2, hasItem(isA(BeanImpl2.class)));
-        //如果没有  public List<BeanInteface> customBeanIntefaceList() 则如下返回真
-//        Assert.assertEquals(2, beanIntefaceList.size());
+
     }
 
 
