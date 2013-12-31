@@ -1,15 +1,18 @@
 package com.sishuok.spring4.genericinject;
 
+import com.sishuok.spring4.genericinject.component.BeanImpl1;
 import com.sishuok.spring4.genericinject.component.BeanInteface;
 import org.junit.Assert;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
+import java.util.Arrays;
 import java.util.List;
 
 /**
@@ -37,10 +40,15 @@ public class GenericInjectTest {
     @ComponentScan(basePackages = "com.sishuok.spring4.genericinject.component")
     static class GenericInjectConfig {
 
-//        @Bean
-//        public List<BeanInteface> customBeanIntefaceList() {
-//            return Arrays.asList((BeanInteface)new BeanImpl1());
-//        }
+        @Bean
+        public List<BeanInteface> customBeanIntefaceList() {
+            return Arrays.asList((BeanInteface) new BeanImpl1());
+        }
+
+        @Bean
+        public List<BeanImpl1> customBeanBeanImpl1List() {
+            return Arrays.asList(new BeanImpl1());
+        }
 
     }
 }
