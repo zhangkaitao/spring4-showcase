@@ -20,13 +20,13 @@ public class SpringCacheTest {
     @Test
     public void test() throws IOException {
         //创建底层Cache
-        net.sf.ehcache.CacheManager ehcacheCacheManager
+        net.sf.ehcache.CacheManager ehcacheManager
                 = new net.sf.ehcache.CacheManager(new ClassPathResource("ehcache.xml").getInputStream());
 
         //创建Spring的CacheManager
         EhCacheCacheManager cacheCacheManager = new EhCacheCacheManager();
         //设置底层的CacheManager
-        cacheCacheManager.setCacheManager(ehcacheCacheManager);
+        cacheCacheManager.setCacheManager(ehcacheManager);
 
         Long id = 1L;
         User user = new User(id, "zhang", "zhang@gmail.com");

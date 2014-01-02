@@ -37,7 +37,6 @@ public class UserServiceTest {
     @Test
     public void testCache() {
         Long id = 1L;
-
         User user = new User(id, "zhang", "zhang@gmail.com");
         userService.save(user);
 
