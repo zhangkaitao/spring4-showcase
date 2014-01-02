@@ -1,6 +1,7 @@
 package com.sishuok.spring.service;
 
 import com.sishuok.spring.entity.User;
+import org.springframework.cache.Cache;
 import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
@@ -123,12 +124,22 @@ public class UserService {
 
     @Caching(
             evict = {
-                    @CacheEvict(value = "user", key = "#user.id", condition = "#root.caches[0].get(#user.id).get().username ne #user.username", beforeInvocation = true)
+//                    @CacheEvict(value = "user", key = "#user.id", condition = "#root.target.canCache() and #root.caches[0].get(#user.id).get().username ne #user.username", beforeInvocation = true)
+                    @CacheEvict(value = "user", key = "#user.id", condition = "#root.target.canEvict(#root.caches[0], #user.id, #user.username)", beforeInvocation = true)
             }
     )
     public void conditionUpdate(User user) {
         users.remove(user);
         users.add(user);
+    }
+
+
+    public boolean canEvict(Cache userCache, Long id, String username) {
+        User cacheUser = userCache.get(id, User.class);
+        if (cacheUser == null) {
+            return false;
+        }
+        return !cacheUser.getUsername().equals(username);
     }
 
 }
