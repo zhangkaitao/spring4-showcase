@@ -31,8 +31,30 @@ public class DynamicDeployBeans {
 
     protected static final Log logger = LogFactory.getLog(DynamicDeployBeans.class);
 
+    private static Method determineUrlsForHandlerMethod =
+            ReflectionUtils.findMethod(DefaultAnnotationHandlerMapping.class, "determineUrlsForHandler", String.class);
+
+    private static Method registerHandlerMethod =
+            ReflectionUtils.findMethod(DefaultAnnotationHandlerMapping.class, "registerHandler", String[].class, String.class);
+
+    private static Method detectHandlerMethodsMethod =
+            ReflectionUtils.findMethod(RequestMappingHandlerMapping.class, "detectHandlerMethods", Object.class);
+
+    private static final String SCRIPT_FACTORY_POST_PROCESSOR_BEAN_NAME =
+            "org.springframework.scripting.config.scriptFactoryPostProcessor";
+
+    static {
+        detectHandlerMethodsMethod.setAccessible(true);
+        registerHandlerMethod.setAccessible(true);
+        detectHandlerMethodsMethod.setAccessible(true);
+    }
+
+
     private ApplicationContext ctx;
     private DefaultListableBeanFactory beanFactory;
+
+    private boolean hasRegisterScriptFactoryPostProcessor = false;
+
 
     @Autowired
     public void setApplicationContext(ApplicationContext ctx) {
@@ -77,20 +99,6 @@ public class DynamicDeployBeans {
 
     }
 
-    private static Method determineUrlsForHandlerMethod =
-            ReflectionUtils.findMethod(DefaultAnnotationHandlerMapping.class, "determineUrlsForHandler", String.class);
-
-    private static Method registerHandlerMethod =
-            ReflectionUtils.findMethod(DefaultAnnotationHandlerMapping.class, "registerHandler", String[].class, String.class);
-
-    private static Method detectHandlerMethodsMethod =
-            ReflectionUtils.findMethod(RequestMappingHandlerMapping.class, "detectHandlerMethods", Object.class);
-
-    static {
-        detectHandlerMethodsMethod.setAccessible(true);
-        registerHandlerMethod.setAccessible(true);
-        detectHandlerMethodsMethod.setAccessible(true);
-    }
 
     private void addHandler(String controllerBeanName) {
         DefaultAnnotationHandlerMapping annotationHandlerMapping = null;
@@ -119,6 +127,33 @@ public class DynamicDeployBeans {
 
     }
 
+    public void registerGroovyController(String scriptLocation) {
+        registerGroovyController(scriptLocation, -1L);
+    }
+
+    // refreshCheckDelay in millis
+    public void registerGroovyController(String scriptLocation, Long refreshCheckDelay) {
+        registerScriptFactoryPostProcessorIfNecessary();
+        // Create script factory bean definition.
+        GenericBeanDefinition bd = new GenericBeanDefinition();
+        bd.setBeanClassName(GroovyScriptFactory.class.getName());
+
+        bd.setAttribute(ScriptFactoryPostProcessor.LANGUAGE_ATTRIBUTE, "groovy");
+        bd.setAttribute(ScriptFactoryPostProcessor.REFRESH_CHECK_DELAY_ATTRIBUTE, refreshCheckDelay);
+
+        bd.setAttribute(ScriptFactoryPostProcessor.PROXY_TARGET_CLASS_ATTRIBUTE, true);
+
+        ConstructorArgumentValues cav = bd.getConstructorArgumentValues();
+        int constructorArgNum = 0;
+        cav.addIndexedArgumentValue(constructorArgNum++, scriptLocation);
+
+        String controllerBeanName =
+                BeanDefinitionReaderUtils.registerWithGeneratedName(bd, beanFactory);
+
+        addHandler(controllerBeanName);
+    }
+
+
     private DefaultAnnotationHandlerMapping defaultAnnotationHandlerMapping() {
         try {
             return ctx.getBean(DefaultAnnotationHandlerMapping.class);
@@ -135,39 +170,16 @@ public class DynamicDeployBeans {
         }
     }
 
-    public void registerGroovyController(String scriptLocation) {
-        registerScriptFactoryPostProcessorIfNecessary();
-        // Create script factory bean definition.
-        GenericBeanDefinition bd = new GenericBeanDefinition();
-        bd.setBeanClassName(GroovyScriptFactory.class.getName());
-
-        bd.setAttribute(ScriptFactoryPostProcessor.LANGUAGE_ATTRIBUTE, "groovy");
-        Long refreshCheckDelay = -1L;
-        bd.setAttribute(ScriptFactoryPostProcessor.REFRESH_CHECK_DELAY_ATTRIBUTE, refreshCheckDelay);
-
-        bd.setAttribute(ScriptFactoryPostProcessor.PROXY_TARGET_CLASS_ATTRIBUTE, true);
-
-        ConstructorArgumentValues cav = bd.getConstructorArgumentValues();
-        int constructorArgNum = 0;
-        cav.addIndexedArgumentValue(constructorArgNum++, scriptLocation);
-
-        String controllerBeanName =
-                BeanDefinitionReaderUtils.registerWithGeneratedName(bd, beanFactory);
-
-        System.out.println(ctx.getBean(controllerBeanName));
-
-        addHandler(controllerBeanName);
-    }
-
-    private static final String SCRIPT_FACTORY_POST_PROCESSOR_BEAN_NAME =
-            "org.springframework.scripting.config.scriptFactoryPostProcessor";
 
     private void registerScriptFactoryPostProcessorIfNecessary() {
-        BeanDefinition beanDefinition = null;
-        if (!beanFactory.containsBeanDefinition(SCRIPT_FACTORY_POST_PROCESSOR_BEAN_NAME)) {
-            beanDefinition = new RootBeanDefinition(ScriptFactoryPostProcessor.class);
-            beanFactory.registerBeanDefinition(SCRIPT_FACTORY_POST_PROCESSOR_BEAN_NAME, beanDefinition);
-            beanFactory.addBeanPostProcessor(beanFactory.getBean(ScriptFactoryPostProcessor.class));
+        if (!hasRegisterScriptFactoryPostProcessor) {
+            hasRegisterScriptFactoryPostProcessor = beanFactory.containsBeanDefinition(SCRIPT_FACTORY_POST_PROCESSOR_BEAN_NAME);
+            if (!hasRegisterScriptFactoryPostProcessor) {
+                BeanDefinition beanDefinition = new RootBeanDefinition(ScriptFactoryPostProcessor.class);
+                beanFactory.registerBeanDefinition(SCRIPT_FACTORY_POST_PROCESSOR_BEAN_NAME, beanDefinition);
+                beanFactory.addBeanPostProcessor(beanFactory.getBean(ScriptFactoryPostProcessor.class));
+
+            }
         }
     }
 

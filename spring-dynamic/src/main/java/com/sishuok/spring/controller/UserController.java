@@ -54,7 +54,7 @@ public class UserController {
 
     @RequestMapping("/registerGroovyController")
     public String registerGroovyController() {
-        dynamicDeployBeans.registerGroovyController("classpath:com/sishuok/spring/dynamic/GroovyController.groovy");
+        dynamicDeployBeans.registerGroovyController("classpath:com/sishuok/spring/dynamic/GroovyController.groovy", 500L);
         return "success";
     }
 
