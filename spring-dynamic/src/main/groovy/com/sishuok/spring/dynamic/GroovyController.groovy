@@ -13,12 +13,8 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class GroovyController {
 
-    private UserController userController;
-
     @Autowired
-    public void setUserController(UserController userController) {
-        this.userController = userController;
-    }
+    private UserController userController;
 
     @RequestMapping("/groovy")
     public String hello() {

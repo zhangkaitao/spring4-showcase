@@ -98,7 +98,8 @@ public class ReplaceAndRefreshableScriptTargetSource extends BeanFactoryRefresha
         Map<String, InjectionMetadata> injectionMetadataMap =
                 (Map<String, InjectionMetadata>) ReflectionUtils.getField(injectionMetadataCacheField, autowiredAnnotationBeanPostProcessor);
 
-        System.out.println(injectionMetadataMap.remove(beanName));
+        injectionMetadataMap.remove(beanName.replace("scriptedObject", "scriptFactory"));
+        injectionMetadataMap.remove(beanName);
     }
 
     private static Field injectionMetadataCacheField =
