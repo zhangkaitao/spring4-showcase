@@ -1,9 +1,6 @@
 package com.sishuok.spring.controller;
 
-import com.sishuok.spring.dynamic.DynamicController;
-import com.sishuok.spring.dynamic.DynamicDeployBeans;
-import com.sishuok.spring.dynamic.DynamicService1;
-import com.sishuok.spring.dynamic.DynamicService2;
+import com.sishuok.spring.dynamic.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
@@ -25,6 +22,9 @@ public class UserController {
 
     @Autowired
     private DynamicDeployBeans dynamicDeployBeans;
+
+    @Autowired
+    private DynamicDeployBeans2 dynamicDeployBeans2;
 
     @RequestMapping("/hello")
     public String hello() {
@@ -57,6 +57,7 @@ public class UserController {
     @RequestMapping("/registerGroovyController")
     public String registerGroovyController() throws IOException {
         dynamicDeployBeans.registerGroovyController("classpath:com/sishuok/spring/dynamic/GroovyController.groovy");
+//        dynamicDeployBeans2.registerGroovyController("classpath:com/sishuok/spring/dynamic/GroovyController.groovy", 500L);
         return "success";
     }
 
