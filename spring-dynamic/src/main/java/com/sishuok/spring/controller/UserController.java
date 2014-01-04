@@ -56,8 +56,8 @@ public class UserController {
 
     @RequestMapping("/registerGroovyController")
     public String registerGroovyController() throws IOException {
-        dynamicDeployBeans.registerGroovyController("classpath:com/sishuok/spring/dynamic/GroovyController.groovy");
-//        dynamicDeployBeans2.registerGroovyController("classpath:com/sishuok/spring/dynamic/GroovyController.groovy", 500L);
+//        dynamicDeployBeans.registerGroovyController("classpath:com/sishuok/spring/dynamic/GroovyController.groovy");
+        dynamicDeployBeans2.registerGroovyController("classpath:com/sishuok/spring/dynamic/GroovyController.groovy");
         return "success";
     }
 

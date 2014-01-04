@@ -15,7 +15,6 @@ import org.springframework.scripting.support.ScriptFactoryPostProcessor;
 import org.springframework.util.*;
 import org.springframework.web.context.WebApplicationContext;
 import org.springframework.web.method.HandlerMethodSelector;
-import org.springframework.web.servlet.mvc.annotation.DefaultAnnotationHandlerMapping;
 import org.springframework.web.servlet.mvc.method.RequestMappingInfo;
 import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
@@ -33,14 +32,6 @@ public class DynamicDeployBeans2 {
 
     protected static final Log logger = LogFactory.getLog(DynamicDeployBeans2.class);
 
-    //DefaultAnnotationHandlerMapping
-    private static Method determineUrlsForHandlerMethod =
-            ReflectionUtils.findMethod(DefaultAnnotationHandlerMapping.class, "determineUrlsForHandler", String.class);
-    private static Method registerHandlerMethod =
-            ReflectionUtils.findMethod(DefaultAnnotationHandlerMapping.class, "registerHandler", String[].class, String.class);
-    private static Field handlerMapField =
-            ReflectionUtils.findField(DefaultAnnotationHandlerMapping.class, "handlerMap", Map.class);
-
     //RequestMappingHandlerMapping
     private static Method detectHandlerMethodsMethod =
             ReflectionUtils.findMethod(RequestMappingHandlerMapping.class, "detectHandlerMethods", Object.class);
@@ -55,14 +46,13 @@ public class DynamicDeployBeans2 {
     private static Field urlMapField =
             ReflectionUtils.findField(RequestMappingHandlerMapping.class, "urlMap", MultiValueMap.class);
 
+
     private static final String SCRIPT_FACTORY_POST_PROCESSOR_BEAN_NAME =
             "org.springframework.scripting.config.scriptFactoryPostProcessor";
 
-    static {
-        detectHandlerMethodsMethod.setAccessible(true);
-        registerHandlerMethod.setAccessible(true);
-        handlerMapField.setAccessible(true);
+    private Long refreshCheckDelay = -1L;
 
+    static {
         detectHandlerMethodsMethod.setAccessible(true);
         getMappingForMethodMethod.setAccessible(true);
         getMappingPathPatternsMethod.setAccessible(true);
@@ -85,6 +75,10 @@ public class DynamicDeployBeans2 {
         }
         this.ctx = ctx;
         this.beanFactory = (DefaultListableBeanFactory) ctx.getAutowireCapableBeanFactory();
+    }
+
+    public void setRefreshCheckDelay(Long refreshCheckDelay) {
+        this.refreshCheckDelay = refreshCheckDelay;
     }
 
     public void registerBean(Class<?> beanClass) {
@@ -121,11 +115,6 @@ public class DynamicDeployBeans2 {
 
 
     public void registerGroovyController(String scriptLocation) {
-        registerGroovyController(scriptLocation, -1L);
-    }
-
-    // refreshCheckDelay in millis
-    public void registerGroovyController(String scriptLocation, Long refreshCheckDelay) {
         registerScriptFactoryPostProcessorIfNecessary();
         // Create script factory bean definition.
         GenericBeanDefinition bd = new GenericBeanDefinition();
@@ -140,95 +129,62 @@ public class DynamicDeployBeans2 {
         int constructorArgNum = 0;
         cav.addIndexedArgumentValue(constructorArgNum++, scriptLocation);
 
-        String controllerBeanName =
-                BeanDefinitionReaderUtils.registerWithGeneratedName(bd, beanFactory);
-
+        String controllerBeanName = scriptLocation;
+        beanFactory.registerBeanDefinition(controllerBeanName, bd);
         addHandler(controllerBeanName);
     }
 
 
     private void addHandler(String controllerBeanName) {
-        DefaultAnnotationHandlerMapping annotationHandlerMapping = null;
-        RequestMappingHandlerMapping requestMappingHandlerMapping = null;
+        RequestMappingHandlerMapping requestMappingHandlerMapping = requestMappingHandlerMapping();
 
+        //remove old
+        Class<?> handlerType = ctx.getType(controllerBeanName);
+        final Class<?> userType = ClassUtils.getUserClass(handlerType);
 
-        if ((annotationHandlerMapping = defaultAnnotationHandlerMapping()) != null) {
-            //spring 3.1 之前
-            String[] urls = (String[]) ReflectionUtils.invokeMethod(determineUrlsForHandlerMethod, annotationHandlerMapping, controllerBeanName);
-            if (!StringUtils.isEmpty(urls)) {
-                Map handlerMap =
-                        (Map) ReflectionUtils.getField(handlerMapField, annotationHandlerMapping);
-                //remove old
-                for (String url : urls) {
-                    handlerMap.remove(url);
-                }
-                // URL paths found: Let's consider it a handler.
-                ReflectionUtils.invokeMethod(registerHandlerMethod, annotationHandlerMapping, urls, controllerBeanName);
-            } else {
-                if (logger.isDebugEnabled()) {
-                    logger.debug("Rejected bean name '" + controllerBeanName + "': no URL paths identified");
+        Map handlerMethods = (Map) ReflectionUtils.getField(handlerMethodsField, requestMappingHandlerMapping);
+        MultiValueMap urlMapping = (MultiValueMap) ReflectionUtils.getField(urlMapField, requestMappingHandlerMapping);
+
+        final RequestMappingHandlerMapping innerRequestMappingHandlerMapping = requestMappingHandlerMapping;
+        Set<Method> methods = HandlerMethodSelector.selectMethods(userType, new ReflectionUtils.MethodFilter() {
+            @Override
+            public boolean matches(Method method) {
+                return ReflectionUtils.invokeMethod(
+                        getMappingForMethodMethod,
+                        innerRequestMappingHandlerMapping,
+                        method, userType) != null;
+            }
+        });
+
+        for (Method method : methods) {
+            RequestMappingInfo mapping =
+                    (RequestMappingInfo) ReflectionUtils.invokeMethod(getMappingForMethodMethod, requestMappingHandlerMapping, method, userType);
+            handlerMethods.remove(mapping);
+
+            Set<String> patterns =
+                    (Set<String>) ReflectionUtils.invokeMethod(getMappingPathPatternsMethod, requestMappingHandlerMapping, mapping);
+
+            PathMatcher pathMatcher =
+                    (PathMatcher) ReflectionUtils.invokeMethod(getPathMatcherMethod, requestMappingHandlerMapping);
+
+            for (String pattern : patterns) {
+                if (!pathMatcher.isPattern(pattern)) {
+                    urlMapping.remove(pattern);
                 }
             }
-
-        } else if ((requestMappingHandlerMapping = requestMappingHandlerMapping()) != null) {
-            //remove old
-            Class<?> handlerType = ctx.getType(controllerBeanName);
-            final Class<?> userType = ClassUtils.getUserClass(handlerType);
-
-            Map handlerMethods = (Map) ReflectionUtils.getField(handlerMethodsField, requestMappingHandlerMapping);
-            MultiValueMap urlMapping = (MultiValueMap) ReflectionUtils.getField(urlMapField, requestMappingHandlerMapping);
-
-            final RequestMappingHandlerMapping innerRequestMappingHandlerMapping = requestMappingHandlerMapping;
-            Set<Method> methods = HandlerMethodSelector.selectMethods(userType, new ReflectionUtils.MethodFilter() {
-                @Override
-                public boolean matches(Method method) {
-                    return ReflectionUtils.invokeMethod(
-                            getMappingForMethodMethod,
-                            innerRequestMappingHandlerMapping,
-                            method, userType) != null;
-                }
-            });
-
-            for (Method method : methods) {
-                RequestMappingInfo mapping =
-                        (RequestMappingInfo) ReflectionUtils.invokeMethod(getMappingForMethodMethod, requestMappingHandlerMapping, method, userType);
-                handlerMethods.remove(mapping);
-
-                Set<String> patterns =
-                        (Set<String>) ReflectionUtils.invokeMethod(getMappingPathPatternsMethod, requestMappingHandlerMapping, mapping);
-
-                PathMatcher pathMatcher =
-                        (PathMatcher) ReflectionUtils.invokeMethod(getPathMatcherMethod, requestMappingHandlerMapping);
-
-                for (String pattern : patterns) {
-                    if (!pathMatcher.isPattern(pattern)) {
-                        urlMapping.remove(pattern);
-                    }
-                }
-            }
-
-            //spring 3.1 开始
-            ReflectionUtils.invokeMethod(detectHandlerMethodsMethod, requestMappingHandlerMapping, controllerBeanName);
-        } else {
-            throw new IllegalArgumentException("applicationContext must contains DefaultAnnotationHandlerMapping or RequestMappingHandlerMapping bean");
         }
 
+        //spring 3.1 开始
+        ReflectionUtils.invokeMethod(detectHandlerMethodsMethod, requestMappingHandlerMapping, controllerBeanName);
 
-    }
 
-    private DefaultAnnotationHandlerMapping defaultAnnotationHandlerMapping() {
-        try {
-            return ctx.getBean(DefaultAnnotationHandlerMapping.class);
-        } catch (Exception e) {
-            return null;
-        }
     }
 
     private RequestMappingHandlerMapping requestMappingHandlerMapping() {
         try {
             return ctx.getBean(RequestMappingHandlerMapping.class);
         } catch (Exception e) {
-            return null;
+            throw new IllegalArgumentException("applicationContext must has RequestMappingHandlerMapping");
         }
     }
 

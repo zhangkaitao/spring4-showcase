@@ -23,4 +23,8 @@
         <constructor-arg value="500"/>
     </bean>
 
+    <bean id="dynamicDeployBeans2" class="com.sishuok.spring.dynamic.DynamicDeployBeans2">
+        <property name="refreshCheckDelay" value="500"/>
+    </bean>
+
 </beans>

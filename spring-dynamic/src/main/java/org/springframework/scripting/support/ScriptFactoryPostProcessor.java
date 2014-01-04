@@ -311,7 +311,7 @@ public class ScriptFactoryPostProcessor extends InstantiationAwareBeanPostProces
         long refreshCheckDelay = resolveRefreshCheckDelay(bd);
         if (refreshCheckDelay >= 0) {
             Class<?>[] interfaces = scriptFactory.getScriptInterfaces();
-            RefreshableScriptTargetSource ts = new RefreshableScriptTargetSource(this.scriptBeanFactory,
+            ReplaceAndRefreshableScriptTargetSource ts = new ReplaceAndRefreshableScriptTargetSource(this.scriptBeanFactory,
                     scriptedObjectBeanName, scriptFactory, scriptSource, isFactoryBean);
             boolean proxyTargetClass = resolveProxyTargetClass(bd);
             String language = (String) bd.getAttribute(LANGUAGE_ATTRIBUTE);
@@ -571,7 +571,7 @@ public class ScriptFactoryPostProcessor extends InstantiationAwareBeanPostProces
 
         DelegatingIntroductionInterceptor introduction = new DelegatingIntroductionInterceptor(ts);
         introduction.suppressInterface(TargetSource.class);
-        if (ts instanceof RefreshableScriptTargetSource) {
+        if (ts instanceof ReplaceAndRefreshableScriptTargetSource) {
             proxyFactory.addAdvice(new ScriptReplaceClassInfoMethodInterceptor());
         }
         proxyFactory.addAdvice(introduction);

@@ -1,5 +1,6 @@
 package com.sishuok.spring.controller
 
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.RestController
 
@@ -12,8 +13,16 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 class GroovyController {
 
+    private UserController userController;
+
+    @Autowired
+    public void setUserController(UserController userController) {
+        this.userController = userController;
+    }
+
     @RequestMapping("/groovy")
     public String hello() {
+        println(userController.hello());
         return "hello";
     }
 
