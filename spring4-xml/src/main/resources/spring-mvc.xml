@@ -59,5 +59,4 @@
         <property name="defaultLocale" value="zh_CN"/>
     </bean>
 
-
 </beans>

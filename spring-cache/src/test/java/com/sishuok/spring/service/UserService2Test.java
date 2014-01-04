@@ -2,7 +2,6 @@ package com.sishuok.spring.service;
 
 import com.sishuok.spring.AppConfig;
 import com.sishuok.spring.entity.User;
-import junit.framework.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -19,10 +18,10 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
  */
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(classes = AppConfig.class)
-public class UserServiceTest {
+public class UserService2Test {
 
     @Autowired
-    private UserService userService;
+    private UserService2 userService;
 
     @Autowired
     private CacheManager cacheManager;
@@ -40,7 +39,15 @@ public class UserServiceTest {
         Long id = 1L;
         User user = new User(id, "zhang", "zhang@gmail.com");
         userService.save(user);
-        Assert.assertNotNull(userCache.get(id).get());
+
+        //一定要复制一个 否则cache了(因为同一个JVM测试的)
+        User user2 = new User(id, "zhang2", "zhang@gmail.com");
+        userService.conditionUpdate(user2);
+
         userService.findById(id);
+        userService.findByUsername("zhang2");
+
     }
+
+
 }

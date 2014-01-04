@@ -37,6 +37,7 @@ public class AppConfig implements CachingConfigurer {
         }
     }
 
+    @Bean
     @Override
     public KeyGenerator keyGenerator() {
         return new SimpleKeyGenerator();

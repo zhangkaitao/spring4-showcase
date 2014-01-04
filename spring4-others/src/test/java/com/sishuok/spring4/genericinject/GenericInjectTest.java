@@ -13,6 +13,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.ImportResource;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
+import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandlerMapping;
 
 import java.util.Arrays;
 import java.util.List;
@@ -57,6 +58,7 @@ public class GenericInjectTest {
         assertEquals(1, myList2.size());
         assertThat(myList2, hasItem(isA(BeanImpl2.class)));
 
+        RequestMappingHandlerMapping r;
     }
 
 
