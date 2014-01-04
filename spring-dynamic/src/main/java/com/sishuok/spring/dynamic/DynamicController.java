@@ -13,6 +13,7 @@ public class DynamicController {
 
     @RequestMapping("/controller")
     public String controller() {
+        System.out.println(123);
         return "success";
     }
 }

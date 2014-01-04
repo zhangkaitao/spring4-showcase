@@ -19,6 +19,8 @@
     </bean>
 
 
-    <bean id="dynamicDeployBeans" class="com.sishuok.spring.dynamic.DynamicDeployBeans"/>
+    <bean id="dynamicDeployBeans" class="com.sishuok.spring.dynamic.DynamicDeployBeans">
+        <constructor-arg value="500"/>
+    </bean>
 
 </beans>

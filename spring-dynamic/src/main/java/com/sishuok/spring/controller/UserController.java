@@ -9,6 +9,8 @@ import org.springframework.context.ApplicationContext;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.IOException;
+
 /**
  * <p>User: Zhang Kaitao
  * <p>Date: 13-12-13
@@ -53,8 +55,8 @@ public class UserController {
     }
 
     @RequestMapping("/registerGroovyController")
-    public String registerGroovyController() {
-        dynamicDeployBeans.registerGroovyController("classpath:com/sishuok/spring/dynamic/GroovyController.groovy", 500L);
+    public String registerGroovyController() throws IOException {
+        dynamicDeployBeans.registerGroovyController("classpath:com/sishuok/spring/dynamic/GroovyController.groovy");
         return "success";
     }
 

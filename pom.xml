@@ -17,6 +17,7 @@
         <module>spring4-datetime-jsr310</module>
         <module>spring-mvc-test</module>
         <module>spring-cache</module>
+        <module>spring-dynamic</module>
     </modules>
 
 </project>
