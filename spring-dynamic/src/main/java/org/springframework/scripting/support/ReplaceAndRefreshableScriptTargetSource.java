@@ -37,7 +37,7 @@ import java.util.Map;
  * @author Mark Fisher
  * @since 2.0
  */
-public class ReplaceAndRefreshableScriptTargetSource extends BeanFactoryRefreshableTargetSource {
+public class ReplaceAndRefreshableScriptTargetSource extends RefreshableScriptTargetSource {
 
     private final ScriptFactory scriptFactory;
 
@@ -59,7 +59,7 @@ public class ReplaceAndRefreshableScriptTargetSource extends BeanFactoryRefresha
     public ReplaceAndRefreshableScriptTargetSource(BeanFactory beanFactory, String beanName,
                                                    ScriptFactory scriptFactory, ScriptSource scriptSource, boolean isFactoryBean) {
 
-        super(beanFactory, beanName);
+        super(beanFactory, beanName, scriptFactory, scriptSource, isFactoryBean);
         Assert.notNull(scriptFactory, "ScriptFactory must not be null");
         Assert.notNull(scriptSource, "ScriptSource must not be null");
         this.scriptFactory = scriptFactory;
@@ -85,6 +85,7 @@ public class ReplaceAndRefreshableScriptTargetSource extends BeanFactoryRefresha
     @Override
     protected Object obtainFreshBean(BeanFactory beanFactory, String beanName) {
         removeInjectCache(beanFactory, beanName);
+
         return super.obtainFreshBean(beanFactory,
                 (this.isFactoryBean ? BeanFactory.FACTORY_BEAN_PREFIX + beanName : beanName));
     }
