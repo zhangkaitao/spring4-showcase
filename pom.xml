@@ -18,6 +18,9 @@
         <module>spring-mvc-test</module>
         <module>spring-cache</module>
         <module>spring-dynamic</module>
+        <module>spring-task</module>
+        <module>spring-xmlhandlers</module>
+        <module>spring-xmlhandlersclient</module>
     </modules>
 
 </project>
