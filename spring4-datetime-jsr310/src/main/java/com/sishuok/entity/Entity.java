@@ -11,8 +11,9 @@ import java.time.LocalTime;
  * Created by Administrator on 13-12-20.
  */
 public class Entity implements Serializable {
+	private static final long serialVersionUID = -1175309250079037453L;
 
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+	@DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime dateTime;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
