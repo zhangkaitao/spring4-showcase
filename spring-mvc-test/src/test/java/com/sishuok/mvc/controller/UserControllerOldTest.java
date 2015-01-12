@@ -27,7 +27,7 @@ public class UserControllerOldTest {
         MockHttpServletRequest req = new MockHttpServletRequest();
         ModelAndView mv = userController.view(1L, req);
 
-        ModelAndViewAssert.assertViewName(mv, "users/view");
+        ModelAndViewAssert.assertViewName(mv, "user/view");
         ModelAndViewAssert.assertModelAttributeAvailable(mv, "user");
 
     }
