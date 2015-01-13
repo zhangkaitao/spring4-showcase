@@ -13,6 +13,7 @@ import java.util.Set;
  * <p>User: Zhang Kaitao
  * <p>Date: 14-1-1
  * <p>Version: 1.0
+ * @see <a href="http://jinnianshilongnian.iteye.com/blog/2001040">Spring Cache抽象详解</a>
  */
 @Service
 public class UserService {

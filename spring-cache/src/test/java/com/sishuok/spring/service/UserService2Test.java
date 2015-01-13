@@ -1,7 +1,10 @@
 package com.sishuok.spring.service;
 
+import junit.framework.Assert;
+
 import com.sishuok.spring.AppConfig;
 import com.sishuok.spring.entity.User;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,6 +43,10 @@ public class UserService2Test {
         User user = new User(id, "zhang", "zhang@gmail.com");
         userService.save(user);
 
+        user = (User)userCache.get(id).get();
+        Assert.assertNotNull(user);
+        Assert.assertEquals("zhang", user.getUsername());
+        
         //一定要复制一个 否则cache了(因为同一个JVM测试的)
         User user2 = new User(id, "zhang2", "zhang@gmail.com");
         userService.conditionUpdate(user2);
