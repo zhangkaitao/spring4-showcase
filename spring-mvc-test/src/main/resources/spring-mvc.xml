@@ -10,6 +10,7 @@
        ">
     <!-- 通过web.xml中的 org.springframework.web.servlet.DispatcherServlet 加载的  -->
     <!-- 请参考 http://jinnianshilongnian.iteye.com/blog/1602617  -->
+    <!-- use-default-filters 请参考 http://jinnianshilongnian.iteye.com/blog/1762632 -->
     <context:component-scan base-package="com.sishuok.mvc" use-default-filters="false">
         <context:include-filter type="annotation" expression="org.springframework.stereotype.Controller"/>
     </context:component-scan>

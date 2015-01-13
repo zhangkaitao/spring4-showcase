@@ -14,7 +14,9 @@ import java.io.Serializable;
 @XmlRootElement(name = "user")
 @XmlAccessorType(XmlAccessType.FIELD)
 public class User implements Serializable {
-    @XmlElement(name = "id")
+	private static final long serialVersionUID = 8353162731184990374L;
+	
+	@XmlElement(name = "id")
     private Long id;
     @XmlElement(name = "name")
     private String name;

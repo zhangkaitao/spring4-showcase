@@ -57,9 +57,10 @@ import com.sishuok.mvc.entity.User;
  * <p>User: Zhang Kaitao
  * <p>Date: 13-12-28
  * <p>Version: 1.0
+ * <p>{@link <a href="http://jinnianshilongnian.iteye.com/blog/2004660">Spring MVC测试框架详解——服务端测试</a>}  
  */
 @RunWith(SpringJUnit4ClassRunner.class)
-@WebAppConfiguration(value = "spring-mvc-test/src/main/webapp")
+@WebAppConfiguration(value = "src/main/webapp")
 @ContextHierarchy({
         @ContextConfiguration(name = "parent", locations = "classpath:spring-config.xml"),
         @ContextConfiguration(name = "child", locations = "classpath:spring-mvc.xml")
@@ -113,7 +114,7 @@ public class ServerControllerTest {
     @Test
     public void test4() throws Exception {
         //验证请求参数绑定
-        mockMvc.perform(post("/user").param("name", "zhang")) //执行传递参数的POST请求(也可以post("/user?name=zhang"))
+    	mockMvc.perform(post("/user/1/edit").param("name", "zhang")) //执行传递参数的POST请求(也可以post("/user?name=zhang"))
                 .andExpect(handler().handlerType(UserController.class)) //验证执行的控制器类型
                 .andExpect(handler().methodName("create")) //验证执行的控制器方法名
                 .andExpect(model().hasNoErrors()) //验证页面没有错误
@@ -124,7 +125,7 @@ public class ServerControllerTest {
     @Test
     public void test5() throws Exception {
         //验证请求参数验证失败
-        mockMvc.perform(post("/user").param("name", "admin")) //执行请求
+        mockMvc.perform(post("/user/1/edit").param("name", "admin")) //执行请求
                 .andExpect(model().hasErrors()) //验证模型有错误
                 .andExpect(model().attributeDoesNotExist("name")) //验证存在错误的属性
                 .andExpect(view().name("showCreateForm")); //验证视图
