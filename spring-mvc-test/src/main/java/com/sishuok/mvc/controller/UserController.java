@@ -37,8 +37,8 @@ public class UserController {
         return mv;
     }
 
-
-    @RequestMapping(method = RequestMethod.POST)
+    
+    @RequestMapping(value = "/{id}/edit", method = RequestMethod.POST)
     public String create(
             @ModelAttribute("user") User user,
             BindingResult result,

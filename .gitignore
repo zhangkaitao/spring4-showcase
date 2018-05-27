@@ -1,0 +1,18 @@
+*.class
+
+*.jar
+*.war
+*.ear
+
+# Idea
+.idea
+*.iml
+
+# Eclipse
+.project
+.settings/
+*/.project
+*/.classpath
+*/.settings/
+*/target/
+

@@ -17,6 +17,7 @@
         <property name="suffix" value=".jsp"/>
     </bean>
 
+	<!-- 基于Cookie的国际化配置 -->
     <bean id="localeResolver" class="org.springframework.web.servlet.i18n.CookieLocaleResolver">
         <property name="cookieName" value="language"/>
         <property name="cookieMaxAge" value="3600"/>

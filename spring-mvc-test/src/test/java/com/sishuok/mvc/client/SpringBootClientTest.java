@@ -3,6 +3,7 @@ package com.sishuok.mvc.client;
 import com.sishuok.mvc.controller.UserRestController;
 import com.sishuok.mvc.entity.User;
 import com.sishuok.mvc.service.UserService;
+
 import org.junit.AfterClass;
 import org.junit.BeforeClass;
 import org.junit.Test;
@@ -93,7 +94,7 @@ public class SpringBootClientTest extends AbstractClientTest {
         assertEquals(user, responseEntity.getBody());
     }
 
-    @Test
+	@Test
     public void testUpdate() throws Exception {
         User user = new User();
         user.setId(1L);
@@ -102,17 +103,17 @@ public class SpringBootClientTest extends AbstractClientTest {
         String uri = baseUri + "/{id}";
 
         restTemplate.setMessageConverters(Arrays.<HttpMessageConverter<?>>asList(new MappingJackson2HttpMessageConverter()));
-        ResponseEntity responseEntity = restTemplate.exchange(uri, HttpMethod.PUT, new HttpEntity<>(user), (Class) null, user.getId());
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(uri, HttpMethod.PUT, new HttpEntity<>(user), (Class<Object>) null, user.getId());
 
         assertEquals(HttpStatus.NO_CONTENT, responseEntity.getStatusCode());
     }
 
-    @Test
+	@Test
     public void testDelete() throws Exception {
         String uri = baseUri + "/{id}";
         Long id = 1L;
 
-        ResponseEntity responseEntity = restTemplate.exchange(uri, HttpMethod.DELETE, HttpEntity.EMPTY, (Class) null, id);
+        ResponseEntity<Object> responseEntity = restTemplate.exchange(uri, HttpMethod.DELETE, HttpEntity.EMPTY, (Class<Object>) null, id);
         assertEquals(HttpStatus.OK, responseEntity.getStatusCode());
     }
 
